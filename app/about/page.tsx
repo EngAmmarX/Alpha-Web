@@ -22,17 +22,32 @@ export default function AboutPage() {
   const isRtl = lang === "ar";
 
   useEffect(() => {
-    if (isDark) document.documentElement.classList.add("dark");
-    else document.documentElement.classList.remove("dark");
+    try {
+      const savedTheme = localStorage.getItem("alpha_theme");
+      if (savedTheme) setIsDark(savedTheme === "dark");
+      const savedLang = localStorage.getItem("alpha_lang");
+      if (savedLang === "ar" || savedLang === "en") setLang(savedLang);
+    } catch (e) {}
+  }, []);
+
+  useEffect(() => {
+    if (isDark) {
+      document.documentElement.classList.add("dark");
+      try { localStorage.setItem("alpha_theme", "dark"); } catch(e) {}
+    } else {
+      document.documentElement.classList.remove("dark");
+      try { localStorage.setItem("alpha_theme", "light"); } catch(e) {}
+    }
   }, [isDark]);
 
   useEffect(() => {
     document.documentElement.lang = lang;
     document.documentElement.dir = isRtl ? "rtl" : "ltr";
+    try { localStorage.setItem("alpha_lang", lang); } catch(e) {}
   }, [lang, isRtl]);
 
   return (
-    <div className={`min-h-screen ${isDark ? "bg-[#050d1a] text-slate-100" : "bg-slate-50 text-slate-900"}`}>
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
       <Navbar lang={lang} setLang={setLang} isDark={isDark} setIsDark={setIsDark} />
 
       {/* Page Header */}
@@ -43,20 +58,20 @@ export default function AboutPage() {
               <Building2 className="w-4 h-4" />
               <span>{isRtl ? "الملف التعريفي للشركة" : "Company Profile"}</span>
             </div>
-            <h1 className="text-3xl sm:text-5xl font-bold text-white">
+            <h1 className="text-3xl sm:text-5xl font-bold text-foreground">
               {isRtl ? (
                 <>
-                  عن شركة القوة المتقدمة <br />
+                  عن مصنع ألفا باور للصناعات الكهربائية <br />
                   <span className="text-gold-gradient">مسيرة هندسية وصناعية متكاملة</span>
                 </>
               ) : (
                 <>
-                  About Advanced Alpha Power <br />
+                  About ALPHA POWER for Electrical Industries <br />
                   <span className="text-gold-gradient">Integrated Engineering & Manufacturing</span>
                 </>
               )}
             </h1>
-            <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+            <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
               {isRtl
                 ? "تاريخ حافل بالتميز الهندسي في إدارة وتنفيذ مشاريع المقاولات الكهروميكانيكية المتكاملة والتصنيع الدقيق بين المملكة العربية السعودية وجمهورية مصر العربية."
                 : "A proven legacy of engineering excellence in managing and executing turnkey MEP solutions and precision manufacturing across Saudi Arabia and Egypt."}
@@ -70,26 +85,26 @@ export default function AboutPage() {
         {/* Leadership & Profile */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           <div className="lg:col-span-6 space-y-6">
-            <h2 className="text-2xl sm:text-3xl font-bold text-white">
+            <h2 className="text-2xl sm:text-3xl font-bold text-foreground">
               {isRtl ? "الإدارة والريادة التنفيذية" : "Executive Leadership & Heritage"}
             </h2>
-            <div className="p-4 rounded-xl bg-slate-900/80 border border-[#d4af37]/30">
+            <div className="p-4 rounded-xl bg-card border border-[#d4af37]/30 shadow-md">
               <span className="text-xs text-[#d4af37] font-bold block mb-1">
-                {isRtl ? "المدير العام (General Manager)" : "General Manager"}
+                CEO
               </span>
-              <strong className="text-lg text-white block">
-                {isRtl ? "المهندس / عادل سعد محمد" : "Eng. Adel Saad Mohamed"}
+              <strong className="text-lg text-foreground block">
+                {isRtl ? "عادل سعد محمد" : "Adel Saad Mohamed"}
               </strong>
-              <p className="text-xs text-slate-300 mt-2 leading-relaxed">
+              <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
                 {isRtl
-                  ? "قيادة هندسية بخبرات متراكمة في إدارة المشاريع الكهروميكانيكية الكبرى، مع الالتزام التام بالجداول الزمنية والمواصفات القياسية الدولية."
-                  : "Seasoned engineering leadership with deep expertise in executing complex MEP projects, adhering strictly to global standards and project timelines."}
+                  ? "قيادة تنفيذية وهندسية بخبرات متراكمة في إدارة المشاريع الكهروميكانيكية الكبرى، مع الالتزام التام بالجداول الزمنية والمواصفات القياسية الدولية."
+                  : "Executive and engineering leadership with deep expertise in executing complex MEP projects, adhering strictly to global standards and project timelines."}
               </p>
             </div>
-            <p className="text-slate-300 text-sm leading-relaxed">
+            <p className="text-muted-foreground text-sm leading-relaxed">
               {isRtl
-                ? "تأسست شركة ألفا باور للمقاولات الكهروميكانيكية لتكون حلقة وصل بين التخطيط الهندسي المتقن والتنفيذ الميداني عالي الدقة. نحن نخدم قطاعات الرعاية الصحية، الأبراج الإدارية، المجمعات السكنية، والمصانع العملاقة."
-                : "Advanced Alpha Power was founded to bridge advanced engineering design with on-site turnkey installation, serving healthcare, commercial, residential, and heavy industrial facilities."}
+                ? "تأسس مصنع ألفا باور للصناعات الكهربائية وشركة ألفا باور ليكون حلقة وصل بين التخطيط الهندسي المتقن والتنفيذ الميداني عالي الدقة. نحن نخدم قطاعات الرعاية الصحية، الأبراج الإدارية، المجمعات السكنية، والمصانع العملاقة."
+                : "ALPHA POWER for Electrical Industries was established to bridge advanced engineering design with precision manufacturing and on-site turnkey installation, serving healthcare, commercial, residential, and heavy industrial facilities."}
             </p>
           </div>
 
@@ -107,28 +122,28 @@ export default function AboutPage() {
 
         {/* Vision & Mission */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="p-8 rounded-2xl bg-slate-900/60 border border-[#d4af37]/30 space-y-3">
+          <div className="p-8 rounded-2xl bg-card border border-[#d4af37]/30 shadow-md space-y-3">
             <div className="p-3 w-fit rounded-lg bg-[#d4af37]/15 text-[#d4af37]">
               <Compass className="w-6 h-6" />
             </div>
-            <h3 className="text-xl font-bold text-white">
+            <h3 className="text-xl font-bold text-foreground">
               {isRtl ? "رؤيتنا (Our Vision)" : "Our Vision"}
             </h3>
-            <p className="text-slate-300 text-sm leading-relaxed">
+            <p className="text-muted-foreground text-sm leading-relaxed">
               {isRtl
                 ? "أن نكون الكيان الهندسي والصناعي الأكثر موثوقية وتميزاً في مجال الحلول الكهروميكانيكية المتكاملة وتصنيع لوحات الطاقة ومسارات الكابلات في المملكة العربية السعودية والشرق الأوسط."
                 : "To be the most trusted and recognized electromechanical and industrial engineering powerhouse in Saudi Arabia and the Middle East, driven by quality and continuous innovation."}
             </p>
           </div>
 
-          <div className="p-8 rounded-2xl bg-slate-900/60 border border-[#d4af37]/30 space-y-3">
+          <div className="p-8 rounded-2xl bg-card border border-[#d4af37]/30 shadow-md space-y-3">
             <div className="p-3 w-fit rounded-lg bg-[#d4af37]/15 text-[#d4af37]">
               <Award className="w-6 h-6" />
             </div>
-            <h3 className="text-xl font-bold text-white">
+            <h3 className="text-xl font-bold text-foreground">
               {isRtl ? "رسالتنا (Our Mission)" : "Our Mission"}
             </h3>
-            <p className="text-slate-300 text-sm leading-relaxed">
+            <p className="text-muted-foreground text-sm leading-relaxed">
               {isRtl
                 ? "تقديم خدمات هندسية وصناعية متطورة تتجاوز تطلعات عملائنا وشركائنا، مع الحفاظ على أعلى معايير السلامة المهنية الصارمة والنزاهة المهنية والهندسة القيمة."
                 : "Delivering world-class engineering contracting and manufacturing services that exceed client expectations while maintaining paramount safety standards, integrity, and value engineering."}
@@ -138,7 +153,7 @@ export default function AboutPage() {
 
         {/* 6 Core Values */}
         <div className="space-y-6">
-          <h3 className="text-2xl font-bold text-white text-center">
+          <h3 className="text-2xl font-bold text-foreground text-center">
             {isRtl ? "القيم المؤسسية الراسخة" : "Our Core Corporate Values"}
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -150,10 +165,10 @@ export default function AboutPage() {
               { id: "05", ar: "إدارة مشاريع احترافية", en: "Professional Project Management", descAr: "تنسيق متكامل بين التصاميم والتوريدات والتركيبات الميدانية.", descEn: "Seamless coordination across engineering, procurement, and site execution." },
               { id: "06", ar: "الهندسة القيمة (Value Engineering)", en: "Value Engineering", descAr: "إيجاد بدائل ذكية ترفع الأداء التشغيلي للمنشأة وتوفر النفقات.", descEn: "Innovative alternatives boosting building performance and lifecycle." }
             ].map((v) => (
-              <div key={v.id} className="p-6 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
+              <div key={v.id} className="p-6 rounded-xl bg-card border border-border shadow-sm space-y-2">
                 <span className="text-sm font-bold text-[#d4af37] font-mono">{v.id}</span>
-                <h4 className="text-base font-bold text-white">{isRtl ? v.ar : v.en}</h4>
-                <p className="text-xs text-slate-400 leading-relaxed">{isRtl ? v.descAr : v.descEn}</p>
+                <h4 className="text-base font-bold text-foreground">{isRtl ? v.ar : v.en}</h4>
+                <p className="text-xs text-muted-foreground leading-relaxed">{isRtl ? v.descAr : v.descEn}</p>
               </div>
             ))}
           </div>

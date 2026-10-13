@@ -24,13 +24,28 @@ export default function ServicesPage() {
   const isRtl = lang === "ar";
 
   useEffect(() => {
-    if (isDark) document.documentElement.classList.add("dark");
-    else document.documentElement.classList.remove("dark");
+    try {
+      const savedTheme = localStorage.getItem("alpha_theme");
+      if (savedTheme) setIsDark(savedTheme === "dark");
+      const savedLang = localStorage.getItem("alpha_lang");
+      if (savedLang === "ar" || savedLang === "en") setLang(savedLang);
+    } catch (e) {}
+  }, []);
+
+  useEffect(() => {
+    if (isDark) {
+      document.documentElement.classList.add("dark");
+      try { localStorage.setItem("alpha_theme", "dark"); } catch(e) {}
+    } else {
+      document.documentElement.classList.remove("dark");
+      try { localStorage.setItem("alpha_theme", "light"); } catch(e) {}
+    }
   }, [isDark]);
 
   useEffect(() => {
     document.documentElement.lang = lang;
     document.documentElement.dir = isRtl ? "rtl" : "ltr";
+    try { localStorage.setItem("alpha_lang", lang); } catch(e) {}
   }, [lang, isRtl]);
 
   const serviceList = [
@@ -90,12 +105,12 @@ export default function ServicesPage() {
     },
     {
       icon: Factory,
-      titleAr: "منتجات مصنع ألفا المتقدم ببرج العرب",
-      titleEn: "Advanced Alpha Factory Manufacturing",
-      descAr: "تشكيل وتصنيع صاج عالي الدقة، لوحات التوزيع FT/FW/FF حتى 4,000 أمبير، أرفف التخزين المستودعي الثقيلة، أبواب الطوارئ المقاومة للحريق لمدة 120 دقيقة، وكبائن الإطفاء.",
-      descEn: "Precision sheet-metal manufacturing, certified LV panels up to 4,000A, heavy industrial warehouse pallet racks, 120-minute fire-rated emergency exit doors, and fire hose cabinets.",
-      pointsAr: ["لوحات التوزيع المعتمدة IP54", "سلالم الكابلات المطابقة لـ IEC 61537", "أرفف التخزين المستودعي المصممة للأحمال الثقيلة", "أبواب الطوارئ المصفحة المقاومة للحريق"],
-      pointsEn: ["IP54 rated switchboard enclosures", "IEC 61537 certified cable trays", "Heavy-duty industrial pallet racks", "Fire-rated emergency exit steel doors"]
+      titleAr: "مصنع ألفا باور للصناعات الكهربائية",
+      titleEn: "ALPHA POWER for Electrical Industries",
+      descAr: "تصنيع وتجميع اللوحات الكهربائية المعتمدة FT/FW/FF حتى 4,000 أمبير، سلالم وحوامل الكابلات المعدنية المجلفنة، وأرفف التخزين وأبواب الطوارئ وكبائن الإطفاء بأعلى معايير الدقة.",
+      descEn: "Manufacturing and assembly of certified LV switchboards FT/FW/FF up to 4,000A, hot-dip galvanized cable trays & ladders, industrial storage racks, and life safety enclosures.",
+      pointsAr: ["لوحات التوزيع المعتمدة IP54 / Form 4b", "سلالم الكابلات المطابقة لـ IEC 61537", "أرفف التخزين المستودعي المصممة للأحمال الثقيلة", "أبواب الطوارئ المصفحة المقاومة للحريق"],
+      pointsEn: ["IP54 / Form 4b rated switchboards", "IEC 61537 certified cable trays", "Heavy-duty industrial pallet racks", "Fire-rated emergency exit steel doors"]
     },
     {
       icon: Building2,
@@ -109,7 +124,7 @@ export default function ServicesPage() {
   ];
 
   return (
-    <div className={`min-h-screen ${isDark ? "bg-[#050d1a] text-slate-100" : "bg-slate-50 text-slate-900"}`}>
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
       <Navbar lang={lang} setLang={setLang} isDark={isDark} setIsDark={setIsDark} />
 
       {/* Header */}
@@ -120,7 +135,7 @@ export default function ServicesPage() {
               <Wrench className="w-4 h-4" />
               <span>{isRtl ? "الخدمات الهندسية الشاملة" : "Turnkey Engineering Capabilities"}</span>
             </div>
-            <h1 className="text-3xl sm:text-5xl font-bold text-white">
+            <h1 className="text-3xl sm:text-5xl font-bold text-foreground">
               {isRtl ? (
                 <>
                   خدماتنا الكهروميكانيكية <br />
@@ -133,7 +148,7 @@ export default function ServicesPage() {
                 </>
               )}
             </h1>
-            <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+            <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
               {isRtl
                 ? "نقدم حزمة متكاملة من الخدمات المتخصصة التي تغطي كافة متطلبات المنشآت العصرية وفق أعلى معايير الجودة والسلامة العالمية."
                 : "Comprehensive MEP disciplines covering design, supply, execution, and commissioning for modern infrastructure projects."}
@@ -150,31 +165,31 @@ export default function ServicesPage() {
             return (
               <div
                 key={idx}
-                className="p-8 rounded-2xl bg-slate-900/70 border border-slate-800 hover:border-[#d4af37]/60 hover:shadow-[0_0_25px_rgba(212,175,55,0.15)] transition-all flex flex-col justify-between space-y-6"
+                className="p-8 rounded-2xl bg-card border border-border hover:border-[#d4af37]/60 hover:shadow-[0_0_25px_rgba(212,175,55,0.15)] transition-all flex flex-col justify-between space-y-6 shadow-sm"
               >
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div className="p-3.5 rounded-xl bg-[#d4af37]/15 text-[#d4af37]">
                       <Icon className="w-7 h-7" />
                     </div>
-                    <span className="text-xs font-mono font-bold text-slate-500">
+                    <span className="text-xs font-mono font-bold text-muted-foreground">
                       0{idx + 1}
                     </span>
                   </div>
 
-                  <h3 className="text-xl font-bold text-white">
+                  <h3 className="text-xl font-bold text-foreground">
                     {isRtl ? srv.titleAr : srv.titleEn}
                   </h3>
-                  <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                     {isRtl ? srv.descAr : srv.descEn}
                   </p>
 
                   <div className="pt-2 space-y-2">
-                    <span className="text-xs font-bold text-[#f3e5ab] block">
+                    <span className="text-xs font-bold text-[#d4af37] block">
                       {isRtl ? "أبرز مميزات الخدمة:" : "Key Deliverables:"}
                     </span>
                     {(isRtl ? srv.pointsAr : srv.pointsEn).map((pt, pIdx) => (
-                      <div key={pIdx} className="flex items-center gap-2 text-xs text-slate-300">
+                      <div key={pIdx} className="flex items-center gap-2 text-xs text-foreground">
                         <CheckCircle2 className="w-3.5 h-3.5 text-[#d4af37] flex-shrink-0" />
                         <span>{pt}</span>
                       </div>
@@ -182,7 +197,7 @@ export default function ServicesPage() {
                   </div>
                 </div>
 
-                <div className="pt-4 border-t border-slate-800/80">
+                <div className="pt-4 border-t border-border">
                   <Link
                     href="/contact"
                     className="btn-gold px-4 py-2 rounded-md text-xs font-semibold inline-flex items-center gap-2"

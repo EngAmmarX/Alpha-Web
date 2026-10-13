@@ -109,7 +109,7 @@ export default function Navbar({ lang, setLang, isDark, setIsDark }: NavbarProps
             <div className="relative h-14 sm:h-16 w-36 sm:w-48 flex items-center justify-start">
               <img
                 src="/assets/aap-logo-gold.png"
-                alt="Advanced Alpha Power Logo"
+                alt="ALPHA POWER for Electrical Industries"
                 className="h-full w-auto object-contain transition-transform duration-300 group-hover:scale-105 drop-shadow-[0_2px_8px_rgba(212,175,55,0.25)]"
               />
             </div>
@@ -162,6 +162,27 @@ export default function Navbar({ lang, setLang, isDark, setIsDark }: NavbarProps
         {/* Mobile Dropdown */}
         {mobileMenuOpen && (
           <div className="lg:hidden bg-background border-b border-border px-6 py-4 flex flex-col gap-2 text-sm shadow-xl">
+            {/* Mobile Lang & Theme Controls */}
+            <div className="flex items-center justify-between pb-3 mb-2 border-b border-border">
+              <button
+                onClick={() => setLang(lang === "ar" ? "en" : "ar")}
+                className="px-3 py-1.5 rounded bg-[#d4af37]/15 hover:bg-[#d4af37]/25 dark:text-[#f3e5ab] text-amber-900 font-semibold border border-[#d4af37]/30 transition-all flex items-center gap-1.5 text-xs"
+                aria-label="Switch language"
+              >
+                <Globe className="w-3.5 h-3.5" />
+                <span>{lang === "ar" ? "English" : "عربي"}</span>
+              </button>
+
+              <button
+                onClick={() => setIsDark(!isDark)}
+                className="p-1.5 rounded dark:text-slate-300 text-slate-700 hover:text-[#d4af37] dark:hover:bg-slate-800 hover:bg-slate-200 transition-colors border border-border flex items-center gap-1.5 text-xs"
+                aria-label="Toggle theme"
+              >
+                {isDark ? <Sun className="w-4 h-4 text-[#d4af37]" /> : <Moon className="w-4 h-4 text-slate-700" />}
+                <span className="text-xs">{isDark ? (isRtl ? "الوضع الفاتح" : "Light Mode") : (isRtl ? "الوضع الداكن" : "Dark Mode")}</span>
+              </button>
+            </div>
+
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -174,6 +195,17 @@ export default function Navbar({ lang, setLang, isDark, setIsDark }: NavbarProps
                 {isRtl ? link.labelAr : link.labelEn}
               </Link>
             ))}
+
+            <div className="pt-2">
+              <Link
+                href="/contact"
+                onClick={() => setMobileMenuOpen(false)}
+                className="btn-gold w-full py-2.5 rounded-md text-xs font-semibold flex items-center justify-center gap-2"
+              >
+                <span>{isRtl ? "طلب استشارة هندسية" : "Request Consultation"}</span>
+                {isRtl ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
+              </Link>
+            </div>
           </div>
         )}
       </header>

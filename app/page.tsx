@@ -103,16 +103,16 @@ const richProjects = [
   {
     id: 4,
     image: "/assets/project-006.webp",
-    titleAr: "تصنيع سلالم وحوامل الكابلات بمصنع ألفا",
-    titleEn: "Cable Tray Systems Fabrication — Borg El Arab",
-    categoryAr: "منتجات مصنع ألفا",
-    categoryEn: "Factory Production",
+    titleAr: "تصنيع سلالم وحوامل الكابلات بمصنع ألفا باور",
+    titleEn: "Cable Tray Systems Fabrication — ALPHA POWER",
+    categoryAr: "منتجات مصنع ألفا باور",
+    categoryEn: "ALPHA POWER Products",
     scopeAr: "إنتاج حوامل الكابلات من النوع السلمي والمثقب والمجرى، بأعلى معايير الجلفنة على الساخن لضمان مقاومة التآكل في البيئات القاسية.",
     scopeEn: "In-house precision fabrication of ladder, perforated and duct cable trays with hot-dip galvanizing for harsh environment durability.",
     specsAr: "معتمد IEC 61537 · جلفنة على الساخن BS EN ISO 1461",
     specsEn: "IEC 61537 Certified · Hot-Dip Galvanized",
-    locationAr: "مصنع ألفا — برج العرب، مصر",
-    locationEn: "Alpha Factory — Borg El Arab",
+    locationAr: "مصنع ألفا باور — برج العرب، مصر",
+    locationEn: "ALPHA POWER Factory — Borg El Arab",
     filter: "factory"
   },
   {
@@ -132,17 +132,17 @@ const richProjects = [
   },
   {
     id: 6,
-    image: "/assets/project-014.webp",
+    image: "/assets/project-022.webp",
     titleAr: "لوحات التحكم والتوزيع الكهربائي FT / FW / FF",
     titleEn: "LV Switchboards & Modular Power Panels",
-    categoryAr: "منتجات مصنع ألفا",
-    categoryEn: "Factory Production",
+    categoryAr: "منتجات مصنع ألفا باور",
+    categoryEn: "ALPHA POWER Products",
     scopeAr: "تصنيع وتجميع لوحات التوزيع الفرعية والرئيسية ولوحات الإنارة وتحسين معامل القدرة، مفحوصة ومعايرة وفق المعايير الدولية.",
     scopeEn: "Manufacturing and assembly of Form 2b/4b distribution boards, power factor correction panels, factory-tested to international codes.",
     specsAr: "درجات حماية IP43 إلى IP65 · اختبارات مصنعية شاملة",
     specsEn: "Ingress Protection IP43 to IP65 · Factory Tested",
-    locationAr: "مصنع ألفا — برج العرب، مصر",
-    locationEn: "Alpha Factory — Borg El Arab",
+    locationAr: "مصنع ألفا باور — برج العرب، مصر",
+    locationEn: "ALPHA POWER Factory — Borg El Arab",
     filter: "factory"
   }
 ];
@@ -157,14 +157,34 @@ export default function Home() {
 
   const isRtl = lang === "ar";
 
+  // Hydrate preferences from localStorage
   useEffect(() => {
-    if (isDark) document.documentElement.classList.add("dark");
-    else document.documentElement.classList.remove("dark");
+    try {
+      const savedTheme = localStorage.getItem("alpha_theme");
+      if (savedTheme) {
+        setIsDark(savedTheme === "dark");
+      }
+      const savedLang = localStorage.getItem("alpha_lang");
+      if (savedLang === "ar" || savedLang === "en") {
+        setLang(savedLang);
+      }
+    } catch (e) {}
+  }, []);
+
+  useEffect(() => {
+    if (isDark) {
+      document.documentElement.classList.add("dark");
+      try { localStorage.setItem("alpha_theme", "dark"); } catch(e) {}
+    } else {
+      document.documentElement.classList.remove("dark");
+      try { localStorage.setItem("alpha_theme", "light"); } catch(e) {}
+    }
   }, [isDark]);
 
   useEffect(() => {
     document.documentElement.lang = lang;
     document.documentElement.dir = isRtl ? "rtl" : "ltr";
+    try { localStorage.setItem("alpha_lang", lang); } catch(e) {}
   }, [lang, isRtl]);
 
   // Featured flagship items for Carousel
@@ -196,12 +216,12 @@ export default function Home() {
       },
       {
         id: 3,
-        titleAr: "مصنع ألفا المتقدم — برج العرب",
-        titleEn: "Advanced Alpha Factory — Borg El Arab",
+        titleAr: "مصنع ألفا باور للصناعات الكهربائية",
+        titleEn: "ALPHA POWER for Electrical Industries",
         descAr: "تصنيع دقيق لحوامل وسلالم الكابلات (Cable Trays)، لوحات التوزيع FT/FW/FF، وأنظمة التخزين المعدنية الثقيلة وأبواب الطوارئ.",
-        descEn: "Precision in-house fabrication of cable management systems, certified LV enclosures, heavy industrial racks and fire doors.",
-        image: "/assets/project-006.webp",
-        categoryAr: "التصنيع الصناعي",
+        descEn: "Precision in-house fabrication of cable management systems, certified LV switchboards, heavy industrial racks and fire doors.",
+        image: "/factory-hero.jpg",
+        categoryAr: "التصنيع الصناعي والكهربائي",
         categoryEn: "Precision Manufacturing",
         statsAr: "معتمد IEC 61537",
         statsEn: "IEC 61537 Certified"
@@ -329,28 +349,28 @@ export default function Home() {
             {/* Hero Copy */}
             <div className="lg:col-span-7 space-y-6">
               <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full border border-[#d4af37]/40 bg-[#d4af37]/10 text-xs sm:text-sm font-medium dark:text-[#f3e5ab] text-amber-900">
-                <Award className="w-4 h-4 text-[#d4af37]" />
+                <Factory className="w-4 h-4 text-[#d4af37]" />
                 <span>
                   {isRtl
-                    ? "المملكة العربية السعودية · حلول كهروميكانيكية وصناعية"
-                    : "Kingdom of Saudi Arabia · Electromechanical & Industrial Solutions"}
+                    ? "مصنع ألفا باور للصناعات الكهربائية · برج العرب، مصر · السعودية"
+                    : "ALPHA POWER for Electrical Industries · Egypt & Saudi Arabia"}
                 </span>
               </div>
 
               <div className="space-y-2">
                 <div className="text-xs uppercase tracking-widest font-bold text-[#d4af37]">
-                  {isRtl ? "الهندسة • التصنيع • التنفيذ والتسليم" : "Engineering • Manufacturing • Delivery"}
+                  {isRtl ? "الهندسة • التصنيع الكهربائي المعتمد • المقاولات المتكاملة" : "Engineering • Electrical Manufacturing • Turnkey Solutions"}
                 </div>
                 <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight dark:text-white text-slate-900 leading-[1.15]">
                   {isRtl ? (
                     <>
-                      القوة الهندسية <br />
-                      <span className="text-gold-gradient">لبناء الغد المتطور.</span>
+                      مصنع ألفا باور <br />
+                      <span className="text-gold-gradient">للصناعات الكهربائية</span>
                     </>
                   ) : (
                     <>
-                      Powering <br />
-                      <span className="text-gold-gradient">what comes next.</span>
+                      ALPHA POWER <br />
+                      <span className="text-gold-gradient">for Electrical Industries</span>
                     </>
                   )}
                 </h1>
@@ -358,16 +378,17 @@ export default function Home() {
 
               <p className="text-base sm:text-lg dark:text-slate-300 text-slate-600 leading-relaxed max-w-2xl">
                 {isRtl
-                  ? "حلول كهروميكانيكية وصناعية متكاملة — تبدأ من التصميم الدقيق والتوريد والتصنيع، وحتى التركيب الميداني والاختبار والتشغيل، وصولاً إلى عقود التشغيل والصيانة للمباني والمنشآت الكبرى بالمملكة العربية السعودية ومصر."
-                  : "Integrated electromechanical and industrial solutions—from design and supply through installation, testing, commissioning, operation and maintenance across Saudi Arabia and Egypt."}
+                  ? "صرح صناعي وهندسي رائد في تصنيع اللوحات الكهربائية للجهد المنخفض حتى 4,000A، وسلالم وحوامل الكابلات المعدنية، والحلول الكهروميكانيكية المتكاملة — من التصميم والإنتاج وحتى التركيب والاختبار والتشغيل بالمملكة العربية السعودية ومصر."
+                  : "A premier industrial and engineering facility specializing in certified low-voltage switchboards up to 4,000A, heavy-duty cable management systems, and turnkey MEP contracting across Saudi Arabia and Egypt."}
               </p>
 
               <div className="flex flex-wrap items-center gap-4 pt-2">
                 <Link
-                  href="/services"
+                  href="/factory"
                   className="btn-gold px-7 py-3 rounded-md font-semibold text-sm sm:text-base flex items-center gap-2 shadow-lg"
                 >
-                  <span>{isRtl ? "استكشف قدراتنا التخصصية" : "Explore our capabilities"}</span>
+                  <Factory className="w-4 h-4" />
+                  <span>{isRtl ? "منتجات المصنع والكتالوج" : "Factory Products & Catalogue"}</span>
                   {isRtl ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
                 </Link>
                 <Link
@@ -409,38 +430,38 @@ export default function Home() {
 
             {/* 
               ============================================================
-              HERO VISUAL: NOT IN A CARD — FLOATING ARCHITECTURAL COMPOSITION
+              HERO VISUAL: ADVANCED ALPHA POWER FACTORY PHOTOGRAPH
               WITH GLOWING DEPTH, FLOATING SPECS BADGES & WATERMARK LOGO
               ============================================================
             */}
             <div className="lg:col-span-5 relative flex items-center justify-center">
               {/* Concentric subtle radar & tech coordinate rings */}
-              <div className="absolute -inset-6 rounded-full border border-[#d4af37]/15 pointer-events-none animate-pulse" style={{ animationDuration: "8s" }}></div>
+              <div className="absolute -inset-6 rounded-full border border-[#d4af37]/20 pointer-events-none animate-pulse" style={{ animationDuration: "8s" }}></div>
               <div className="absolute -inset-14 rounded-full border border-blue-500/10 pointer-events-none"></div>
 
               {/* Floating Architectural Stage without card border */}
               <div className="relative w-full max-w-lg">
                 {/* Visual Backdrop Ambient Halo */}
-                <div className="absolute inset-0 bg-gradient-to-tr from-[#d4af37]/25 via-blue-600/15 to-transparent rounded-3xl blur-2xl -z-10 transform -rotate-2 scale-105"></div>
+                <div className="absolute inset-0 bg-gradient-to-tr from-[#d4af37]/30 via-blue-600/20 to-transparent rounded-3xl blur-2xl -z-10 transform -rotate-1 scale-105"></div>
 
-                {/* Free-floating high-res architectural photograph */}
-                <div className="relative aspect-[4/3] w-full rounded-3xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.4)]">
+                {/* Free-floating high-res factory photograph */}
+                <div className="relative aspect-[16/10] sm:aspect-[4/3] w-full rounded-3xl overflow-hidden shadow-[0_25px_60px_rgba(0,0,0,0.5)] border border-[#d4af37]/30">
                   <Image
-                    src="/assets/project-080.webp"
-                    alt="Advanced Alpha Power Field Engineering"
+                    src="/factory-hero.jpg"
+                    alt="ALPHA POWER for Electrical Industries - مصنع ألفا باور للصناعات الكهربائية"
                     fill
                     className="object-cover transition-transform duration-700 hover:scale-105"
                     priority
                   />
                   {/* Subtle cinematic gradient vignette */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent"></div>
 
                   {/* Corner blueprint crosshairs (+) */}
-                  <div className="absolute top-4 start-4 text-[#d4af37] font-mono text-xs opacity-70">+ [AAP-ENG-01]</div>
-                  <div className="absolute top-4 end-4 text-[#d4af37] font-mono text-xs opacity-70">LAT 26.42° N +</div>
+                  <div className="absolute top-4 start-4 text-[#d4af37] font-mono text-xs opacity-90 drop-shadow bg-black/40 px-2 py-0.5 rounded backdrop-blur-sm">+ [AAP-PLANT-01]</div>
+                  <div className="absolute top-4 end-4 text-[#d4af37] font-mono text-xs opacity-90 drop-shadow bg-black/40 px-2 py-0.5 rounded backdrop-blur-sm">BORG EL ARAB +</div>
 
                   {/* Integrated Watermark Stamp in bottom-end corner */}
-                  <div className="absolute bottom-3 end-4 h-12 w-24 opacity-90 drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] pointer-events-none">
+                  <div className="absolute bottom-3 end-4 h-12 w-24 opacity-95 drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] pointer-events-none">
                     <img
                       src="/assets/aap-logo-gold.png"
                       alt="AAP Gold Watermark"
@@ -449,21 +470,21 @@ export default function Home() {
                   </div>
 
                   {/* Bottom overlay info */}
-                  <div className="absolute bottom-3 start-4 max-w-[260px] text-white">
+                  <div className="absolute bottom-3 start-4 max-w-[280px] text-white">
                     <div className="text-xs font-bold text-[#f3e5ab] drop-shadow-md">
-                      {isRtl ? "الهندسة الميدانية المعتمدة" : "Engineering in the field"}
+                      {isRtl ? "مصنع ألفا باور للصناعات الكهربائية" : "ALPHA POWER for Electrical Industries"}
                     </div>
                     <p className="text-[11px] text-slate-200 drop-shadow-md">
                       {isRtl
-                        ? "المملكة العربية السعودية · مصر"
-                        : "Saudi Arabia · Egypt"}
+                        ? "المنطقة الصناعية الرابعة · برج العرب، مصر"
+                        : "4th Industrial Zone · Borg El Arab, Egypt"}
                     </p>
                   </div>
                 </div>
 
                 {/* Floating Metric Pill 1 (Top-Start) */}
-                <div className="absolute -top-4 -start-4 sm:-start-6 px-3.5 py-2 rounded-2xl dark:bg-[#071324]/90 bg-white/95 backdrop-blur-md border border-[#d4af37]/40 shadow-xl flex items-center gap-2.5 z-20">
-                  <div className="w-8 h-8 rounded-lg bg-[#d4af37]/15 flex items-center justify-center text-[#d4af37]">
+                <div className="absolute -top-4 -start-4 sm:-start-6 px-3.5 py-2 rounded-2xl dark:bg-[#071324]/95 bg-white/95 backdrop-blur-md border border-[#d4af37]/50 shadow-2xl flex items-center gap-2.5 z-20">
+                  <div className="w-8 h-8 rounded-lg bg-[#d4af37]/20 flex items-center justify-center text-[#d4af37]">
                     <Zap className="w-4 h-4" />
                   </div>
                   <div>
@@ -477,14 +498,14 @@ export default function Home() {
                 </div>
 
                 {/* Floating Metric Pill 2 (Bottom-Start) */}
-                <div className="absolute -bottom-5 -end-2 sm:-end-4 px-4 py-2 rounded-2xl dark:bg-[#071324]/90 bg-white/95 backdrop-blur-md border border-[#d4af37]/40 shadow-xl flex items-center gap-2.5 z-20">
+                <div className="absolute -bottom-5 -end-2 sm:-end-4 px-4 py-2 rounded-2xl dark:bg-[#071324]/95 bg-white/95 backdrop-blur-md border border-[#d4af37]/50 shadow-2xl flex items-center gap-2.5 z-20">
                   <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
                   <div>
                     <div className="text-[11px] font-bold dark:text-white text-slate-900">
-                      {isRtl ? "+100 مشروع ميداني" : "+100 Projects in Field"}
+                      {isRtl ? "خطوط إنتاج متطورة" : "Advanced Production Lines"}
                     </div>
-                    <div className="text-[9px] dark:text-slate-400 text-slate-500">
-                      {isRtl ? "تنفيذ واختبار وتشغيل" : "Commissioned & Live"}
+                    <div className="text-[9px] text-emerald-400 font-semibold">
+                      {isRtl ? "تشغيل مباشر 100%" : "Certified & Operational"}
                     </div>
                   </div>
                 </div>
@@ -643,8 +664,8 @@ export default function Home() {
 
             <p className="text-muted-foreground leading-relaxed text-sm sm:text-base">
               {isRtl
-                ? "شركة القوة المتقدمة (AAP) هي مزود رائد للحلول الكهروميكانيكية والصناعية في المملكة العربية السعودية. تخدم AAP المشاريع التجارية، السكنية، الرعاية الصحية، الضيافة، والمشاريع الصناعية من خلال أنظمة التكييف HVAC، الأعمال الكهربائية، مكافحة وإنذار الحريق، السباكة، وأنظمة التيار الخفيف. وتمتد خدماتها من التصميم والتوريد والتركيب إلى الاختبار والتشغيل والصيانة. ويقوم مصنع ألفا المتقدم في برج العرب بمصر بإنتاج وتصنيع حوامل الكابلات المعدنية ولوحات التوزيع الكهربائية."
-                : "Advanced Alpha Power (AAP) is a leading provider of electromechanical and industrial solutions in the Kingdom of Saudi Arabia. AAP serves commercial, residential, healthcare, hospitality and industrial projects with HVAC, electrical, fire-fighting, plumbing and low-current systems. Its services span design, supply, installation, testing, commissioning, operation and maintenance. Advanced Alpha Factory in Borg El Arab, Egypt, produces sheet-metal and electrical products."}
+                ? "شركة القوة المتقدمة (AAP) ومصنع ألفا باور للصناعات الكهربائية — رواد تقديم الحلول الكهروميكانيكية والصناعية في المملكة العربية السعودية ومصر. نخدم المشاريع التجارية، السكنية، الرعاية الصحية، الضيافة، والمشاريع الصناعية من خلال أنظمة التكييف HVAC، الأعمال الكهربائية، مكافحة وإنذار الحريق، السباكة، وأنظمة التيار الخفيف. وتمتد خدماتنا من التصميم والتوريد والتركيب إلى الاختبار والتشغيل والصيانة، إلى جانب التصنيع المتكامل للوحات الجهد المنخفض وسلالم وحوامل الكابلات بمصنع ألفا باور ببرج العرب."
+                : "Advanced Alpha Power (AAP) and ALPHA POWER for Electrical Industries provide turnkey electromechanical and industrial solutions across Saudi Arabia and Egypt. AAP serves commercial, residential, healthcare, hospitality and industrial projects with HVAC, electrical, fire-fighting, plumbing and low-current systems—from design, supply and certified fabrication at our Borg El Arab plant to on-site testing, commissioning and maintenance."}
             </p>
 
             {/* Vision & Mission */}
@@ -860,7 +881,7 @@ export default function Home() {
 
       {/* 
         ============================================================
-        ADVANCED ALPHA FACTORY & CATALOGUE (مصنع ألفا المتقدم)
+        ALPHA POWER FACTORY & CATALOGUE (مصنع ألفا باور للصناعات الكهربائية)
         ============================================================
       */}
       <section className="py-20 max-w-7xl mx-auto px-4 sm:px-8">
@@ -868,7 +889,7 @@ export default function Home() {
           <div className="lg:col-span-7 space-y-4">
             <div className="inline-flex items-center gap-2 text-xs font-bold text-[#d4af37] tracking-wider uppercase">
               <Factory className="w-3.5 h-3.5" />
-              <span>{isRtl ? "مصنع ألفا المتقدم · برج العرب، مصر" : "Advanced Alpha Factory · Borg El Arab, Egypt"}</span>
+              <span>{isRtl ? "مصنع ألفا باور للصناعات الكهربائية · برج العرب، مصر" : "ALPHA POWER for Electrical Industries · Borg El Arab, Egypt"}</span>
             </div>
             <h2 className="text-3xl sm:text-4xl font-bold text-foreground leading-tight">
               {isRtl ? (
@@ -1290,7 +1311,7 @@ export default function Home() {
                 {isRtl ? "جمهورية مصر العربية · إدارة الإسكندرية" : "Alexandria · Contact"}
               </div>
               <h3 className="text-base font-bold text-foreground">
-                {isRtl ? "م. عادل سعد محمد · المدير العام" : "Eng. Adel Saad Mohamed · General Manager"}
+                CEO: {isRtl ? "عادل سعد محمد" : "Adel Saad Mohamed"}
               </h3>
               <p className="text-xs text-muted-foreground leading-relaxed">
                 42 Masjed Elanser Street, Sidi Gaber, Alexandria, Egypt
@@ -1314,7 +1335,7 @@ export default function Home() {
                   {isRtl ? "جمهورية مصر العربية · المصنع" : "Egypt · Factory"}
                 </div>
                 <h4 className="text-base font-bold text-foreground">
-                  {isRtl ? "مصنع ألفا المتقدم لتشغيل المعادن" : "Advanced Alpha Factory for Sheet Metal"}
+                  {isRtl ? "مصنع ألفا باور للصناعات الكهربائية" : "ALPHA POWER for Electrical Industries"}
                 </h4>
                 <p className="text-xs text-muted-foreground">
                   Part 15 block 33, fourth industrial zone, Borg El Arab, Alexandria, Egypt

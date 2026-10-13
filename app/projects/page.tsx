@@ -43,13 +43,28 @@ export default function ProjectsPage() {
   const isRtl = lang === "ar";
 
   useEffect(() => {
-    if (isDark) document.documentElement.classList.add("dark");
-    else document.documentElement.classList.remove("dark");
+    try {
+      const savedTheme = localStorage.getItem("alpha_theme");
+      if (savedTheme) setIsDark(savedTheme === "dark");
+      const savedLang = localStorage.getItem("alpha_lang");
+      if (savedLang === "ar" || savedLang === "en") setLang(savedLang);
+    } catch (e) {}
+  }, []);
+
+  useEffect(() => {
+    if (isDark) {
+      document.documentElement.classList.add("dark");
+      try { localStorage.setItem("alpha_theme", "dark"); } catch(e) {}
+    } else {
+      document.documentElement.classList.remove("dark");
+      try { localStorage.setItem("alpha_theme", "light"); } catch(e) {}
+    }
   }, [isDark]);
 
   useEffect(() => {
     document.documentElement.lang = lang;
     document.documentElement.dir = isRtl ? "rtl" : "ltr";
+    try { localStorage.setItem("alpha_lang", lang); } catch(e) {}
   }, [lang, isRtl]);
 
   const categories = useMemo(
@@ -112,7 +127,7 @@ export default function ProjectsPage() {
   };
 
   return (
-    <div className={`min-h-screen ${isDark ? "bg-[#050d1a] text-slate-100" : "bg-slate-50 text-slate-900"}`}>
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
       <Navbar lang={lang} setLang={setLang} isDark={isDark} setIsDark={setIsDark} />
 
       {/* Header */}
@@ -123,7 +138,7 @@ export default function ProjectsPage() {
               <ShieldCheck className="w-4 h-4" />
               <span>{isRtl ? "سابقة الأعمال المنفذة" : "Projects & Executed Work"}</span>
             </div>
-            <h1 className="text-3xl sm:text-5xl font-bold text-white">
+            <h1 className="text-3xl sm:text-5xl font-bold text-foreground">
               {isRtl ? (
                 <>
                   معرض المشاريع والأعمال الميدانية <br />
@@ -136,7 +151,7 @@ export default function ProjectsPage() {
                 </>
               )}
             </h1>
-            <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+            <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
               {isRtl
                 ? "سجل مصوّر يوضح مراحل تنفيذ الأعمال الكهروميكانيكية، التمديدات، محطات الطاقة، وتصنيع حوامل الكابلات ولوحات التوزيع."
                 : "A visual archive documenting electromechanical execution, distribution switchboards, cable ladder networks, and on-site delivery."}
@@ -148,7 +163,7 @@ export default function ProjectsPage() {
       {/* Gallery Controls & Grid */}
       <section className="py-16 max-w-7xl mx-auto px-4 sm:px-8 space-y-10">
         {/* Search & Filter Row */}
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-6 pb-4 border-b border-slate-800">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-6 pb-4 border-b border-border">
           {/* Categories */}
           <div className="flex flex-wrap gap-2 w-full lg:w-auto">
             {categories.map((cat) => (
@@ -161,7 +176,7 @@ export default function ProjectsPage() {
                 className={`px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all ${
                   activeCategory === cat.id
                     ? "bg-[#d4af37] text-[#050d1a] shadow-lg font-bold"
-                    : "bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 border border-slate-700/60"
+                    : "bg-card text-foreground hover:bg-[#d4af37]/20 border border-border"
                 }`}
               >
                 {isRtl ? cat.ar : cat.en}
@@ -176,14 +191,14 @@ export default function ProjectsPage() {
               placeholder={isRtl ? "بحث في المشاريع..." : "Search projects..."}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-4 py-2 ps-9 rounded-lg bg-slate-900 border border-slate-700 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-[#d4af37]"
+              className="w-full px-4 py-2 ps-9 rounded-lg bg-card border border-border text-xs text-foreground placeholder-muted-foreground focus:outline-none focus:border-[#d4af37]"
             />
-            <Search className="w-4 h-4 text-slate-400 absolute start-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <Search className="w-4 h-4 text-muted-foreground absolute start-3 top-1/2 -translate-y-1/2 pointer-events-none" />
           </div>
         </div>
 
         {/* Counter */}
-        <div className="flex items-center justify-between text-xs text-slate-400">
+        <div className="flex items-center justify-between text-xs text-muted-foreground">
           <span>
             {isRtl
               ? `عرض ${displayedProjects.length} من إجمالي ${filteredProjects.length} مشروع`

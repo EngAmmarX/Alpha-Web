@@ -20,13 +20,28 @@ export default function FactoryPage() {
   const isRtl = lang === "ar";
 
   useEffect(() => {
-    if (isDark) document.documentElement.classList.add("dark");
-    else document.documentElement.classList.remove("dark");
+    try {
+      const savedTheme = localStorage.getItem("alpha_theme");
+      if (savedTheme) setIsDark(savedTheme === "dark");
+      const savedLang = localStorage.getItem("alpha_lang");
+      if (savedLang === "ar" || savedLang === "en") setLang(savedLang);
+    } catch (e) {}
+  }, []);
+
+  useEffect(() => {
+    if (isDark) {
+      document.documentElement.classList.add("dark");
+      try { localStorage.setItem("alpha_theme", "dark"); } catch(e) {}
+    } else {
+      document.documentElement.classList.remove("dark");
+      try { localStorage.setItem("alpha_theme", "light"); } catch(e) {}
+    }
   }, [isDark]);
 
   useEffect(() => {
     document.documentElement.lang = lang;
     document.documentElement.dir = isRtl ? "rtl" : "ltr";
+    try { localStorage.setItem("alpha_lang", lang); } catch(e) {}
   }, [lang, isRtl]);
 
   const products = [
@@ -69,7 +84,7 @@ export default function FactoryPage() {
   ];
 
   return (
-    <div className={`min-h-screen ${isDark ? "bg-[#050d1a] text-slate-100" : "bg-slate-50 text-slate-900"}`}>
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
       <Navbar lang={lang} setLang={setLang} isDark={isDark} setIsDark={setIsDark} />
 
       {/* Header */}
@@ -78,25 +93,25 @@ export default function FactoryPage() {
           <div className="max-w-3xl space-y-4">
             <div className="inline-flex items-center gap-2 text-xs font-bold text-[#d4af37] tracking-wider uppercase">
               <Factory className="w-4 h-4" />
-              <span>{isRtl ? "مصنع ألفا المتقدم · برج العرب" : "Advanced Alpha Factory · Borg El Arab"}</span>
+              <span>{isRtl ? "مصنع ألفا باور للصناعات الكهربائية · برج العرب" : "ALPHA POWER for Electrical Industries · Borg El Arab"}</span>
             </div>
-            <h1 className="text-3xl sm:text-5xl font-bold text-white">
+            <h1 className="text-3xl sm:text-5xl font-bold text-foreground">
               {isRtl ? (
                 <>
-                  التصنيع الصناعي الدقيق <br />
+                  التصنيع الصناعي والكهربائي الدقيق <br />
                   <span className="text-gold-gradient">منتجات معتمدة بمعايير عالمية</span>
                 </>
               ) : (
                 <>
-                  Precision Manufacturing <br />
-                  <span className="text-gold-gradient">Certified Products & Specifications</span>
+                  Precision Electrical Manufacturing <br />
+                  <span className="text-gold-gradient">Certified Products & Global Standards</span>
                 </>
               )}
             </h1>
-            <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+            <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
               {isRtl
-                ? "يمتلك المصنع في المنطقة الصناعية الرابعة ببرج العرب خطوط إنتاج متقدمة لتشكيل المعادن والدهان وتجميع اللوحات الكهربائية وسلالم الكابلات المعتمدة."
-                : "Advanced Alpha Factory in the 4th Industrial Zone of Borg El Arab operates certified production lines for cable trays, switchboards, and heavy industrial storage."}
+                ? "يمتلك مصنع ألفا باور للصناعات الكهربائية في المنطقة الصناعية الرابعة ببرج العرب خطوط إنتاج متطورة لتصنيع اللوحات الكهربائية المعتمدة وسلالم وحوامل الكابلات وتشكيل المعادن والدهان الإلكتروستاتيكي بأعلى معايير الجودة."
+                : "ALPHA POWER for Electrical Industries in the 4th Industrial Zone of Borg El Arab operates certified production lines for switchboards, cable trays, and precision industrial enclosures."}
             </p>
           </div>
         </div>
@@ -106,16 +121,16 @@ export default function FactoryPage() {
       <section className="py-20 max-w-7xl mx-auto px-4 sm:px-8 space-y-16">
         <div className="relative rounded-2xl overflow-hidden border-2 border-[#d4af37]/40 shadow-2xl aspect-[16/9] max-w-4xl mx-auto">
           <Image
-            src="/assets/project-006.webp"
-            alt="Advanced Alpha Factory Borg El Arab"
+            src="/factory-hero.jpg"
+            alt="ALPHA POWER for Electrical Industries Borg El Arab"
             fill
             className="object-cover"
           />
           <div className="absolute bottom-4 start-4 end-4 p-4 rounded-xl bg-[#050d1a]/85 backdrop-blur-sm border border-slate-700 flex items-center justify-between text-xs text-slate-200">
             <span className="font-bold text-[#f3e5ab]">
-              {isRtl ? "مصنع ألفا المتقدم — الإسكندرية، مصر" : "Advanced Alpha Factory — Alexandria, Egypt"}
+              {isRtl ? "مصنع ألفا باور للصناعات الكهربائية — الإسكندرية، مصر" : "ALPHA POWER for Electrical Industries — Alexandria, Egypt"}
             </span>
-            <span className="text-[#d4af37]">IEC 61537 Certified</span>
+            <span className="text-[#d4af37]">IEC 61537 / Form 4b Certified</span>
           </div>
         </div>
 
@@ -123,24 +138,24 @@ export default function FactoryPage() {
           {products.map((prod, idx) => (
             <div
               key={idx}
-              className="p-6 rounded-2xl bg-slate-900/70 border border-slate-800 hover:border-[#d4af37]/60 hover:shadow-[0_0_20px_rgba(212,175,55,0.15)] transition-all flex flex-col justify-between space-y-4"
+              className="p-6 rounded-2xl bg-card border border-border hover:border-[#d4af37]/60 hover:shadow-[0_0_20px_rgba(212,175,55,0.15)] transition-all flex flex-col justify-between space-y-4 shadow-sm"
             >
               <div>
                 <span className="text-xs font-mono font-bold text-[#d4af37] block mb-2">
                   0{idx + 1}
                 </span>
-                <h3 className="text-lg font-bold text-white mb-2">
+                <h3 className="text-lg font-bold text-foreground mb-2">
                   {isRtl ? prod.titleAr : prod.titleEn}
                 </h3>
-                <p className="text-xs text-slate-300 leading-relaxed">
+                <p className="text-xs text-muted-foreground leading-relaxed">
                   {isRtl ? prod.descAr : prod.descEn}
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-slate-800">
+              <div className="pt-4 border-t border-border">
                 <Link
                   href="/contact"
-                  className="text-xs font-semibold text-[#f3e5ab] hover:text-[#d4af37] flex items-center gap-1.5"
+                  className="text-xs font-semibold text-[#d4af37] hover:underline flex items-center gap-1.5"
                 >
                   <span>{isRtl ? "طلب تسعير ومواصفات الكتالوج" : "Request Specifications & Quote"}</span>
                   {isRtl ? <ArrowLeft className="w-3.5 h-3.5" /> : <ArrowRight className="w-3.5 h-3.5" />}

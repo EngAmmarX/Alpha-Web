@@ -164,43 +164,49 @@ export default function ClientGlobe({ lang, isDark }: ClientGlobeProps) {
         const text = isRtl ? p.nameAr : p.nameEn;
         const isConsultant = p.category === "consultant";
 
-        ctx.font = `600 11px var(--font-sans, sans-serif)`;
+        ctx.font = isRtl
+          ? "bold 12px 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, sans-serif"
+          : "600 11px system-ui, -apple-system, sans-serif";
         const metrics = ctx.measureText(text);
-        const paddingX = 8;
-        const paddingY = 4;
-        const boxW = metrics.width + paddingX * 2;
-        const boxH = 20;
+        const paddingX = 10;
+        const paddingY = 5;
+        const boxW = Math.max( metrics.width + paddingX * 2, 70 );
+        const boxH = 22;
 
-        // Card background
+        // Card background badge
         ctx.beginPath();
-        ctx.roundRect(-boxW / 2, -boxH / 2, boxW, boxH, 6);
+        if (typeof ctx.roundRect === "function") {
+          ctx.roundRect(-boxW / 2, -boxH / 2, boxW, boxH, 6);
+        } else {
+          ctx.rect(-boxW / 2, -boxH / 2, boxW, boxH);
+        }
 
         if (isConsultant) {
           ctx.fillStyle = isDark
-            ? `rgba(20, 35, 60, ${alpha * 0.85})`
-            : `rgba(235, 240, 250, ${alpha * 0.9})`;
-          ctx.strokeStyle = `rgba(180, 145, 45, ${alpha * 0.8})`;
+            ? `rgba(16, 28, 50, ${Math.max(0.7, alpha)})`
+            : `rgba(240, 245, 255, ${Math.max(0.85, alpha)})`;
+          ctx.strokeStyle = `rgba(212, 175, 55, ${Math.max(0.6, alpha)})`;
         } else {
           ctx.fillStyle = isDark
-            ? `rgba(10, 20, 35, ${alpha * 0.85})`
-            : `rgba(255, 255, 255, ${alpha * 0.92})`;
-          ctx.strokeStyle = `rgba(212, 175, 55, ${alpha * 0.6})`;
+            ? `rgba(10, 18, 30, ${Math.max(0.75, alpha)})`
+            : `rgba(255, 255, 255, ${Math.max(0.92, alpha)})`;
+          ctx.strokeStyle = `rgba(212, 175, 55, ${Math.max(0.5, alpha)})`;
         }
-        ctx.lineWidth = 1;
+        ctx.lineWidth = 1.2;
         ctx.fill();
         ctx.stroke();
 
-        // Text
+        // Text with high contrast
         ctx.fillStyle = isDark
           ? isConsultant
-            ? `rgba(243, 229, 171, ${alpha})`
-            : `rgba(255, 255, 255, ${alpha})`
+            ? "#fce881"
+            : "#ffffff"
           : isConsultant
-          ? `rgba(140, 100, 10, ${alpha})`
-          : `rgba(20, 30, 45, ${alpha})`;
+          ? "#855800"
+          : "#0f172a";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.fillText(text, 0, 1);
+        ctx.fillText(text, 0, 0);
 
         ctx.restore();
       }

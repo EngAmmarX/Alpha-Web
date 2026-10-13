@@ -24,14 +24,14 @@ export default function Footer({ lang }: FooterProps) {
             <div className="h-14 sm:h-16 flex items-center justify-start">
               <img
                 src="/assets/aap-logo-gold.png"
-                alt="Advanced Alpha Power Logo"
+                alt="ALPHA POWER for Electrical Industries"
                 className="h-full w-auto object-contain drop-shadow-[0_2px_8px_rgba(212,175,55,0.25)]"
               />
             </div>
             <p className="text-xs dark:text-slate-300 text-slate-600 leading-relaxed">
               {isRtl
-                ? "شركة القوة المتقدمة المحدودة للتجارة والمقاولات (AAP) ومصنع ألفا المتقدم — حلول كهروميكانيكية وصناعية متكاملة بالمملكة العربية السعودية ومصر."
-                : "Advanced Alpha Power (AAP) delivers turnkey electromechanical and industrial solutions across Saudi Arabia and Egypt."}
+                ? "مصنع ألفا باور للصناعات الكهربائية — حلول كهروميكانيكية وصناعية متكاملة وتصنيع اللوحات ومسارات الكابلات بالمملكة العربية السعودية ومصر."
+                : "ALPHA POWER for Electrical Industries delivers turnkey electromechanical, switchgear, and cable management solutions across Saudi Arabia and Egypt."}
             </p>
           </div>
 
@@ -58,7 +58,7 @@ export default function Footer({ lang }: FooterProps) {
               </li>
               <li>
                 <Link href="/factory" className="hover:text-[#d4af37] transition-colors">
-                  {isRtl ? "مصنع ألفا المتقدم والمنتجات" : "Factory & Products"}
+                  {isRtl ? "مصنع ألفا باور للصناعات الكهربائية" : "ALPHA POWER Factory & Products"}
                 </Link>
               </li>
               <li>
@@ -126,7 +126,7 @@ export default function Footer({ lang }: FooterProps) {
         {/* Bottom Credits & Back to Top */}
         <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
           <p className="dark:text-slate-400 text-slate-600">
-            © 2026 Advanced Alpha Power Co. for Trading & Contracting. {isRtl ? "جميع الحقوق محفوظة." : "All rights reserved."}
+            © 2026 ALPHA POWER for Electrical Industries. {isRtl ? "جميع الحقوق محفوظة." : "All rights reserved."}
           </p>
 
           {/* Exactly requested credit */}

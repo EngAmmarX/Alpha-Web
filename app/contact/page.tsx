@@ -21,13 +21,28 @@ export default function ContactPage() {
   const isRtl = lang === "ar";
 
   useEffect(() => {
-    if (isDark) document.documentElement.classList.add("dark");
-    else document.documentElement.classList.remove("dark");
+    try {
+      const savedTheme = localStorage.getItem("alpha_theme");
+      if (savedTheme) setIsDark(savedTheme === "dark");
+      const savedLang = localStorage.getItem("alpha_lang");
+      if (savedLang === "ar" || savedLang === "en") setLang(savedLang);
+    } catch (e) {}
+  }, []);
+
+  useEffect(() => {
+    if (isDark) {
+      document.documentElement.classList.add("dark");
+      try { localStorage.setItem("alpha_theme", "dark"); } catch(e) {}
+    } else {
+      document.documentElement.classList.remove("dark");
+      try { localStorage.setItem("alpha_theme", "light"); } catch(e) {}
+    }
   }, [isDark]);
 
   useEffect(() => {
     document.documentElement.lang = lang;
     document.documentElement.dir = isRtl ? "rtl" : "ltr";
+    try { localStorage.setItem("alpha_lang", lang); } catch(e) {}
   }, [lang, isRtl]);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -36,7 +51,7 @@ export default function ContactPage() {
   };
 
   return (
-    <div className={`min-h-screen ${isDark ? "bg-[#050d1a] text-slate-100" : "bg-slate-50 text-slate-900"}`}>
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
       <Navbar lang={lang} setLang={setLang} isDark={isDark} setIsDark={setIsDark} />
 
       {/* Header */}
@@ -47,20 +62,20 @@ export default function ContactPage() {
               <MapPin className="w-4 h-4" />
               <span>{isRtl ? "المكاتب والفروع والتواصل" : "Offices & Official Contact"}</span>
             </div>
-            <h1 className="text-3xl sm:text-5xl font-bold text-white">
+            <h1 className="text-3xl sm:text-5xl font-bold text-foreground">
               {isRtl ? (
                 <>
-                  تواصل مع شركة القوة المتقدمة <br />
+                  تواصل مع مصنع ألفا باور للصناعات الكهربائية <br />
                   <span className="text-gold-gradient">فريقنا الهندسي في خدمتكم</span>
                 </>
               ) : (
                 <>
-                  Connect with Advanced Alpha Power <br />
+                  Connect with ALPHA POWER for Electrical Industries <br />
                   <span className="text-gold-gradient">Our Engineering Team Is Ready to Assist</span>
                 </>
               )}
             </h1>
-            <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+            <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
               {isRtl
                 ? "يسعدنا استقبال استفساراتكم ومناقشة متطلبات مشاريعكم الكهروميكانيكية وطلبات منتجات المصنع في السعودية ومصر."
                 : "We welcome your inquiries and look forward to discussing your MEP contracting and factory fabrication needs."}
@@ -73,11 +88,11 @@ export default function ContactPage() {
       <section className="py-20 max-w-7xl mx-auto px-4 sm:px-8 space-y-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           {/* Form */}
-          <div className="lg:col-span-7 p-8 rounded-2xl bg-slate-900/80 border border-[#d4af37]/30 shadow-2xl">
-            <h2 className="text-2xl font-bold text-white mb-2">
+          <div className="lg:col-span-7 p-8 rounded-2xl bg-card border border-[#d4af37]/30 shadow-xl">
+            <h2 className="text-2xl font-bold text-foreground mb-2">
               {isRtl ? "إرسال طلب استشارة أو عرض أسعار" : "Submit Consultation or RFQ"}
             </h2>
-            <p className="text-xs text-slate-400 mb-6">
+            <p className="text-xs text-muted-foreground mb-6">
               {isRtl
                 ? "املأ البيانات أدناه وسيقوم مهندس مختص بالتواصل معك في أقرب وقت."
                 : "Fill in the details below and an engineer will connect with you promptly."}
@@ -86,73 +101,73 @@ export default function ContactPage() {
             {submitted ? (
               <div className="p-6 rounded-xl bg-[#d4af37]/15 border border-[#d4af37]/40 text-center space-y-3">
                 <CheckCircle2 className="w-10 h-10 text-[#d4af37] mx-auto" />
-                <h3 className="text-lg font-bold text-white">
+                <h3 className="text-lg font-bold text-foreground">
                   {isRtl ? "تم استلام رسالتكم بنجاح!" : "Message Received Successfully!"}
                 </h3>
-                <p className="text-xs text-slate-300">
+                <p className="text-xs text-muted-foreground">
                   {isRtl
-                    ? "شكراً لتواصلكم مع شركة القوة المتقدمة. سيقوم فريقنا بالرد عليكم قريباً."
-                    : "Thank you for connecting with AAP. Our team will review your inquiry shortly."}
+                    ? "شكراً لتواصلكم مع مصنع وشركة ألفا باور للصناعات الكهربائية. سيقوم فريقنا بالرد عليكم قريباً."
+                    : "Thank you for connecting with ALPHA POWER. Our team will review your inquiry shortly."}
                 </p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4 text-xs">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-slate-300 font-semibold mb-1">
+                    <label className="block text-foreground font-semibold mb-1">
                       {isRtl ? "الاسم الكامل *" : "Full Name *"}
                     </label>
                     <input
                       required
                       type="text"
                       placeholder={isRtl ? "م. فلان الفلاني" : "e.g. John Doe"}
-                      className="w-full p-3 rounded-lg bg-slate-800 border border-slate-700 text-slate-200 focus:outline-none focus:border-[#d4af37]"
+                      className="w-full p-3 rounded-lg bg-background border border-border text-foreground focus:outline-none focus:border-[#d4af37]"
                     />
                   </div>
                   <div>
-                    <label className="block text-slate-300 font-semibold mb-1">
+                    <label className="block text-foreground font-semibold mb-1">
                       {isRtl ? "اسم الشركة / الجهة" : "Company / Entity"}
                     </label>
                     <input
                       type="text"
                       placeholder={isRtl ? "اسم المؤسسة أو المشروع" : "Company name"}
-                      className="w-full p-3 rounded-lg bg-slate-800 border border-slate-700 text-slate-200 focus:outline-none focus:border-[#d4af37]"
+                      className="w-full p-3 rounded-lg bg-background border border-border text-foreground focus:outline-none focus:border-[#d4af37]"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-slate-300 font-semibold mb-1">
+                    <label className="block text-foreground font-semibold mb-1">
                       {isRtl ? "رقم الهاتف / الجوال *" : "Phone / Mobile *"}
                     </label>
                     <input
                       required
                       type="tel"
                       placeholder="+966 / +20..."
-                      className="w-full p-3 rounded-lg bg-slate-800 border border-slate-700 text-slate-200 focus:outline-none focus:border-[#d4af37]"
+                      className="w-full p-3 rounded-lg bg-background border border-border text-foreground focus:outline-none focus:border-[#d4af37]"
                       dir="ltr"
                     />
                   </div>
                   <div>
-                    <label className="block text-slate-300 font-semibold mb-1">
+                    <label className="block text-foreground font-semibold mb-1">
                       {isRtl ? "البريد الإلكتروني *" : "Email Address *"}
                     </label>
                     <input
                       required
                       type="email"
                       placeholder="name@domain.com"
-                      className="w-full p-3 rounded-lg bg-slate-800 border border-slate-700 text-slate-200 focus:outline-none focus:border-[#d4af37]"
+                      className="w-full p-3 rounded-lg bg-background border border-border text-foreground focus:outline-none focus:border-[#d4af37]"
                       dir="ltr"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-slate-300 font-semibold mb-1">
+                  <label className="block text-foreground font-semibold mb-1">
                     {isRtl ? "مجال الاستفسار *" : "Area of Interest *"}
                   </label>
-                  <select className="w-full p-3 rounded-lg bg-slate-800 border border-slate-700 text-slate-200 focus:outline-none focus:border-[#d4af37]">
+                  <select className="w-full p-3 rounded-lg bg-background border border-border text-foreground focus:outline-none focus:border-[#d4af37]">
                     <option>{isRtl ? "مقاولات تكييف وتهوية (HVAC)" : "HVAC Contracting"}</option>
                     <option>{isRtl ? "شبكات وأعمال كهربائية" : "Electrical Works"}</option>
                     <option>{isRtl ? "شبكات مكافحة وإنذار الحريق" : "Fire Protection & Alarm"}</option>
@@ -164,14 +179,14 @@ export default function ContactPage() {
                 </div>
 
                 <div>
-                  <label className="block text-slate-300 font-semibold mb-1">
+                  <label className="block text-foreground font-semibold mb-1">
                     {isRtl ? "تفاصيل الرسالة أو متطلبات المشروع *" : "Message Details *"}
                   </label>
                   <textarea
                     required
                     rows={4}
                     placeholder={isRtl ? "اكتب تفاصيل طلبك والموقع والمواصفات المطلوبة..." : "Write your project specifications and requirements..."}
-                    className="w-full p-3 rounded-lg bg-slate-800 border border-slate-700 text-slate-200 focus:outline-none focus:border-[#d4af37]"
+                    className="w-full p-3 rounded-lg bg-background border border-border text-foreground focus:outline-none focus:border-[#d4af37]"
                   ></textarea>
                 </div>
 
@@ -189,7 +204,7 @@ export default function ContactPage() {
           {/* Branches Column */}
           <div className="lg:col-span-5 space-y-6">
             {/* KSA */}
-            <div className="p-6 rounded-2xl bg-slate-900 border border-[#d4af37]/30 space-y-3">
+            <div className="p-6 rounded-2xl bg-card border border-[#d4af37]/30 shadow-md space-y-3">
               <div className="flex items-center justify-between">
                 <span className="p-2.5 rounded-lg bg-[#d4af37]/15 text-[#d4af37]">
                   <Building2 className="w-5 h-5" />
@@ -198,16 +213,16 @@ export default function ContactPage() {
                   {isRtl ? "المملكة العربية السعودية" : "Saudi Arabia"}
                 </span>
               </div>
-              <h3 className="text-lg font-bold text-white">{isRtl ? "مكتب الدمام" : "Dammam Office"}</h3>
-              <p className="text-xs text-slate-300 leading-relaxed">
+              <h3 className="text-lg font-bold text-foreground">{isRtl ? "مكتب الدمام" : "Dammam Office"}</h3>
+              <p className="text-xs text-muted-foreground leading-relaxed">
                 3554 King Fahad Ibn Abdulaziz Saud St., Al Adamah Dist., Dammam, KSA
               </p>
-              <div className="space-y-1.5 pt-2 border-t border-slate-800 text-xs">
-                <a href="tel:+966567693915" className="flex items-center gap-2 text-slate-300 hover:text-[#d4af37]">
+              <div className="space-y-1.5 pt-2 border-t border-border text-xs">
+                <a href="tel:+966567693915" className="flex items-center gap-2 text-muted-foreground hover:text-[#d4af37]">
                   <Phone className="w-3.5 h-3.5 text-[#d4af37]" />
                   <span dir="ltr">+966 56 769 3915</span>
                 </a>
-                <a href="tel:+966568621348" className="flex items-center gap-2 text-slate-300 hover:text-[#d4af37]">
+                <a href="tel:+966568621348" className="flex items-center gap-2 text-muted-foreground hover:text-[#d4af37]">
                   <Phone className="w-3.5 h-3.5 text-[#d4af37]" />
                   <span dir="ltr">+966 56 862 1348</span>
                 </a>
@@ -215,7 +230,7 @@ export default function ContactPage() {
             </div>
 
             {/* Alex */}
-            <div className="p-6 rounded-2xl bg-slate-900 border border-[#d4af37]/30 space-y-3">
+            <div className="p-6 rounded-2xl bg-card border border-[#d4af37]/30 shadow-md space-y-3">
               <div className="flex items-center justify-between">
                 <span className="p-2.5 rounded-lg bg-[#d4af37]/15 text-[#d4af37]">
                   <Compass className="w-5 h-5" />
@@ -224,25 +239,25 @@ export default function ContactPage() {
                   {isRtl ? "الإسكندرية · مصر" : "Alexandria · Egypt"}
                 </span>
               </div>
-              <h3 className="text-lg font-bold text-white">
+              <h3 className="text-lg font-bold text-foreground">
                 {isRtl ? "مقر الإدارة والمقاولات" : "Management HQ"}
               </h3>
-              <p className="text-xs text-[#f3e5ab] font-bold">
-                {isRtl ? "إشراف م. عادل سعد محمد" : "Eng. Adel Saad Mohamed"}
+              <p className="text-xs text-[#d4af37] font-bold">
+                CEO: {isRtl ? "عادل سعد محمد" : "Adel Saad Mohamed"}
               </p>
-              <p className="text-xs text-slate-300 leading-relaxed">
+              <p className="text-xs text-muted-foreground leading-relaxed">
                 42 Masjed Elanser Street, Sidi Gaber, Alexandria, Egypt
               </p>
-              <div className="space-y-1.5 pt-2 border-t border-slate-800 text-xs">
-                <a href="tel:+201226003327" className="flex items-center gap-2 text-slate-300 hover:text-[#d4af37]">
+              <div className="space-y-1.5 pt-2 border-t border-border text-xs">
+                <a href="tel:+201226003327" className="flex items-center gap-2 text-muted-foreground hover:text-[#d4af37]">
                   <Phone className="w-3.5 h-3.5 text-[#d4af37]" />
                   <span dir="ltr">+20 122 600 3327</span>
                 </a>
-                <a href="tel:+201010634217" className="flex items-center gap-2 text-slate-300 hover:text-[#d4af37]">
+                <a href="tel:+201010634217" className="flex items-center gap-2 text-muted-foreground hover:text-[#d4af37]">
                   <Phone className="w-3.5 h-3.5 text-[#d4af37]" />
                   <span dir="ltr">+20 101 063 4217</span>
                 </a>
-                <a href="mailto:Alex.alpha.power@gmail.com" className="flex items-center gap-2 text-slate-300 hover:text-[#d4af37]">
+                <a href="mailto:Alex.alpha.power@gmail.com" className="flex items-center gap-2 text-muted-foreground hover:text-[#d4af37]">
                   <Mail className="w-3.5 h-3.5 text-[#d4af37]" />
                   <span>Alex.alpha.power@gmail.com</span>
                 </a>
@@ -250,7 +265,7 @@ export default function ContactPage() {
             </div>
 
             {/* Factory */}
-            <div className="p-6 rounded-2xl bg-slate-900 border border-[#d4af37]/30 space-y-3">
+            <div className="p-6 rounded-2xl bg-card border border-[#d4af37]/30 shadow-md space-y-3">
               <div className="flex items-center justify-between">
                 <span className="p-2.5 rounded-lg bg-[#d4af37]/15 text-[#d4af37]">
                   <Factory className="w-5 h-5" />
@@ -259,18 +274,18 @@ export default function ContactPage() {
                   {isRtl ? "المصنع والإنتاج" : "Industrial Plant"}
                 </span>
               </div>
-              <h3 className="text-lg font-bold text-white">
-                {isRtl ? "مصنع ألفا المتقدم" : "Advanced Alpha Factory"}
+              <h3 className="text-lg font-bold text-foreground">
+                {isRtl ? "مصنع ألفا باور للصناعات الكهربائية" : "ALPHA POWER for Electrical Industries"}
               </h3>
-              <p className="text-xs text-slate-300 leading-relaxed">
+              <p className="text-xs text-muted-foreground leading-relaxed">
                 Part 15 block 33, 4th industrial zone, Borg El Arab, Alexandria, Egypt
               </p>
-              <div className="space-y-1.5 pt-2 border-t border-slate-800 text-xs">
-                <a href="tel:0201025262754" className="flex items-center gap-2 text-slate-300 hover:text-[#d4af37]">
+              <div className="space-y-1.5 pt-2 border-t border-border text-xs">
+                <a href="tel:0201025262754" className="flex items-center gap-2 text-muted-foreground hover:text-[#d4af37]">
                   <Phone className="w-3.5 h-3.5 text-[#d4af37]" />
                   <span dir="ltr">+20 102 526 2754</span>
                 </a>
-                <a href="tel:0201150884433" className="flex items-center gap-2 text-slate-300 hover:text-[#d4af37]">
+                <a href="tel:0201150884433" className="flex items-center gap-2 text-muted-foreground hover:text-[#d4af37]">
                   <Phone className="w-3.5 h-3.5 text-[#d4af37]" />
                   <span dir="ltr">+20 115 088 4433</span>
                 </a>
